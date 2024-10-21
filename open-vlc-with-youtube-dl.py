@@ -2,24 +2,25 @@ import subprocess
 
 vlc_path = r"C:\Program Files\VideoLAN\VLC\vlc.exe"
 
-try:
-  url = input('URL: ')
-  subprocess.call(f'yt-dlp -F {url}')
-  video_format = input('(Optional) Choose VIDEO format: ') or 'best'
-  audio_format = input('(Optional) Choose AUDIO format: ') or 'bestaudio'
-  # Two separate commands since the format of --get-url sometimes returns multiple results for the video format,
-  # which means doing --format={video_format}+{audio_format} is difficult to parse
-  video_stream_url = subprocess.check_output(f'yt-dlp --get-url --format {video_format} {url}')
-  video_stream_url = video_stream_url.decode('utf-8').split('\n')[0]
-  audio_stream_url = subprocess.check_output(f'yt-dlp --get-url --format {audio_format} {url}')
-  audio_stream_url = audio_stream_url.decode('utf-8').split('\n')[0]
-  subprocess.Popen([
-    vlc_path,
-    '--meta-title=youtube-dl',
-    video_stream_url,
-    "--input-slave",
-    audio_stream_url
-  ])
-except Exception as e:
-  print(e)
-  input('Press Enter to exit')
+while True:
+  try:
+    url = input('URL: ')
+    subprocess.call(f'yt-dlp -F {url}')
+    video_format = input('(Optional) Choose VIDEO format: ') or 'best'
+    audio_format = input('(Optional) Choose AUDIO format: ') or 'bestaudio'
+    # Two separate commands since the format of --get-url sometimes returns multiple results for the video format,
+    # which means doing --format={video_format}+{audio_format} is difficult to parse
+    video_stream_url = subprocess.check_output(f'yt-dlp --get-url --format {video_format} {url}')
+    video_stream_url = video_stream_url.decode('utf-8').split('\n')[0]
+    audio_stream_url = subprocess.check_output(f'yt-dlp --get-url --format {audio_format} {url}')
+    audio_stream_url = audio_stream_url.decode('utf-8').split('\n')[0]
+    subprocess.Popen([
+      vlc_path,
+      '--meta-title=youtube-dl',
+      video_stream_url,
+      "--input-slave",
+      audio_stream_url
+    ])
+    break
+  except Exception as e:
+    print(e)
